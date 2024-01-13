@@ -1,5 +1,5 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
-import { ApiMapping, CorsHttpMethod, DomainName, HttpApi, HttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
+import { ApiMapping, CfnStage, CorsHttpMethod, DomainName, HttpApi, HttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
 import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 import { Certificate, CertificateValidation } from 'aws-cdk-lib/aws-certificatemanager';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
@@ -65,8 +65,17 @@ export class KarmaCartApiStack extends Stack {
         ],
         allowOrigins: [`https://${uiDomain}`],
       },
-      disableExecuteApiEndpoint: true
+      disableExecuteApiEndpoint: true,
+
     });
+
+    const defaultStage = karmaCartApi.defaultStage?.node.defaultChild as CfnStage;
+
+    // Define throttle settings for the default stage.
+    defaultStage.defaultRouteSettings = {
+      throttlingBurstLimit: 5,
+      throttlingRateLimit: 10
+    };
     
     const findOneCompanyIntegration = new HttpLambdaIntegration('FindOneCompanyIntegration',findOneCompanyLambda);
     
@@ -75,6 +84,7 @@ export class KarmaCartApiStack extends Stack {
       path: '/company/{id}',
       methods: [ HttpMethod.GET],
       integration: findOneCompanyIntegration,
+
     });
 
     const findAllCompaniesIntegration = new HttpLambdaIntegration('FindAllCompaniesIntegration',findAllCompaniesLambda);
