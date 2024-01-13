@@ -104,7 +104,6 @@ export class KarmaCartApiStack extends Stack {
       integration: updateCompanyPreferenceIntegration,
     });
     
-    
     // Create Certificate
     const cert = new Certificate(
       this,
