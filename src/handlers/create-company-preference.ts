@@ -4,7 +4,7 @@ async function handler(event: APIGatewayProxyEvent, context: Context) {
   
   const response: APIGatewayProxyResult = {
     statusCode: 200,
-    body: JSON.stringify(`find-one-company id: ${event.pathParameters?.id} success!`),
+    body: JSON.stringify(`create-company-preference success!`),
   };
 
   return response;

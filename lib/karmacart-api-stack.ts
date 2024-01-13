@@ -1,5 +1,5 @@
-import { CfnOutput, Stack, StackProps } from 'aws-cdk-lib';
-import { ApiMapping, CfnDomainName, CorsHttpMethod, DomainName, HttpApi, HttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
+import { Stack, StackProps } from 'aws-cdk-lib';
+import { ApiMapping, CorsHttpMethod, DomainName, HttpApi, HttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
 import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 import { Certificate, CertificateValidation } from 'aws-cdk-lib/aws-certificatemanager';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
@@ -21,14 +21,37 @@ export class KarmaCartApiStack extends Stack {
     const apiDomain = `karma-cart-api-${envLevel}.${rootDomain}`
 
     const handlersDirectory = join(__dirname, "..", "src", "handlers")
+    const nodeRuntime = Runtime.NODEJS_20_X
     
-    // Create a Lambda function
+    // Create Lambda functions...
     const findOneCompanyLambda = new NodejsFunction(this, "FindOneCompanyLambda", {
-      runtime: Runtime.NODEJS_20_X,
+      runtime: nodeRuntime,
       handler: "handler",
-      functionName: "karmacart-api-get-company-func",
+      functionName: "karmacart-api-find-one-company-func",
       entry: handlersDirectory + "/find-one-company.ts",
     });
+
+    const findAllCompaniesLambda = new NodejsFunction(this, "FindAllCompaniesLambda", {
+      runtime: nodeRuntime,
+      handler: "handler",
+      functionName: "karmacart-api-find-all-companies-func",
+      entry: handlersDirectory + "/find-all-companies.ts",
+    });
+
+    const createCompanyPreferenceLambda = new NodejsFunction(this, "CreateCompanyPreferenceLambda", {
+      runtime: nodeRuntime,
+      handler: "handler",
+      functionName: "karmacart-api-create-company-preference-func",
+      entry: handlersDirectory + "/create-company-preference.ts",
+    });
+
+    const updateCompanyPreferenceLambda = new NodejsFunction(this, "UpdateCompanyPreferenceLambda", {
+      runtime: nodeRuntime,
+      handler: "handler",
+      functionName: "karmacart-api-update-company-preference-func",
+      entry: handlersDirectory + "/update-company-preference.ts",
+    });
+    // ...Lambda functions
     
     // Create an API Gateway 
     const karmaCartApi = new HttpApi(this, "KarmaCartApi", {
@@ -47,12 +70,40 @@ export class KarmaCartApiStack extends Stack {
     
     const findOneCompanyIntegration = new HttpLambdaIntegration('FindOneCompanyIntegration',findOneCompanyLambda);
     
-    // Create a resource and method for the API
+    // Create a find one company resource and method for the API
     karmaCartApi.addRoutes({
-      path: '/company',
+      path: '/company/{id}',
       methods: [ HttpMethod.GET],
       integration: findOneCompanyIntegration,
     });
+
+    const findAllCompaniesIntegration = new HttpLambdaIntegration('FindAllCompaniesIntegration',findAllCompaniesLambda);
+    
+    // Create a find all companies resource and method for the API
+    karmaCartApi.addRoutes({
+      path: '/company',
+      methods: [ HttpMethod.GET],
+      integration: findAllCompaniesIntegration,
+    });
+
+    const createCompanyPreferenceIntegration = new HttpLambdaIntegration('CreateCompanyPreferenceIntegration',createCompanyPreferenceLambda);
+    
+    // Create a create company preference resource and method for the API
+    karmaCartApi.addRoutes({
+      path: '/company-preference/{id}',
+      methods: [ HttpMethod.POST],
+      integration: createCompanyPreferenceIntegration,
+    });
+
+    const updateCompanyPreferenceIntegration = new HttpLambdaIntegration('UpdateCompanyPreferenceIntegration',updateCompanyPreferenceLambda);
+    
+    // Create a update company preference resource and method for the API
+    karmaCartApi.addRoutes({
+      path: '/company-preference/{id}',
+      methods: [ HttpMethod.PUT],
+      integration: updateCompanyPreferenceIntegration,
+    });
+    
     
     // Create Certificate
     const cert = new Certificate(
