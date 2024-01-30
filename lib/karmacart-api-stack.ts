@@ -37,20 +37,6 @@ export class KarmaCartApiStack extends Stack {
       functionName: "karmacart-api-find-all-companies-func",
       entry: handlersDirectory + "/find-all-companies.ts",
     });
-
-    const createCompanyPreferenceLambda = new NodejsFunction(this, "CreateCompanyPreferenceLambda", {
-      runtime: nodeRuntime,
-      handler: "handler",
-      functionName: "karmacart-api-create-company-preference-func",
-      entry: handlersDirectory + "/create-company-preference.ts",
-    });
-
-    const updateCompanyPreferenceLambda = new NodejsFunction(this, "UpdateCompanyPreferenceLambda", {
-      runtime: nodeRuntime,
-      handler: "handler",
-      functionName: "karmacart-api-update-company-preference-func",
-      entry: handlersDirectory + "/update-company-preference.ts",
-    });
     // ...Lambda functions
     
     // Create an API Gateway 
@@ -84,7 +70,6 @@ export class KarmaCartApiStack extends Stack {
       path: '/company/{id}',
       methods: [ HttpMethod.GET],
       integration: findOneCompanyIntegration,
-
     });
 
     const findAllCompaniesIntegration = new HttpLambdaIntegration('FindAllCompaniesIntegration',findAllCompaniesLambda);
@@ -94,24 +79,6 @@ export class KarmaCartApiStack extends Stack {
       path: '/company',
       methods: [ HttpMethod.GET],
       integration: findAllCompaniesIntegration,
-    });
-
-    const createCompanyPreferenceIntegration = new HttpLambdaIntegration('CreateCompanyPreferenceIntegration',createCompanyPreferenceLambda);
-    
-    // Create a create company preference resource and method for the API
-    karmaCartApi.addRoutes({
-      path: '/company-preference/{id}',
-      methods: [ HttpMethod.POST],
-      integration: createCompanyPreferenceIntegration,
-    });
-
-    const updateCompanyPreferenceIntegration = new HttpLambdaIntegration('UpdateCompanyPreferenceIntegration',updateCompanyPreferenceLambda);
-    
-    // Create a update company preference resource and method for the API
-    karmaCartApi.addRoutes({
-      path: '/company-preference/{id}',
-      methods: [ HttpMethod.PUT],
-      integration: updateCompanyPreferenceIntegration,
     });
     
     // Create Certificate
