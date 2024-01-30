@@ -59,8 +59,8 @@ export class KarmaCartApiStack extends Stack {
 
     // Define throttle settings for the default stage.
     defaultStage.defaultRouteSettings = {
-      throttlingBurstLimit: 5,
-      throttlingRateLimit: 10
+      throttlingBurstLimit: 10,
+      throttlingRateLimit: 5
     };
     
     const findOneCompanyIntegration = new HttpLambdaIntegration('FindOneCompanyIntegration',findOneCompanyLambda);
