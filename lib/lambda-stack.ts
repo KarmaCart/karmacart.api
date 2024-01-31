@@ -8,14 +8,14 @@ import { join } from 'path';
  * This Stack creates the API Lambdas for the Karmacart API.
  */
 export class LambdaStack extends Stack {
-  public readonly findOneCompanyLambda
-  public readonly findAllCompaniesLambda
+  public readonly findOneCompanyLambda;
+  public readonly findAllCompaniesLambda;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const handlersDirectory = join(__dirname, "..", "src", "handlers")
-    const nodeRuntime = Runtime.NODEJS_20_X
+    const handlersDirectory = join(__dirname, "..", "src", "handlers");
+    const nodeRuntime = Runtime.NODEJS_20_X;
     
     this.findOneCompanyLambda = new NodejsFunction(this, "FindOneCompanyLambda", {
       runtime: nodeRuntime,

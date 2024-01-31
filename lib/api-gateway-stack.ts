@@ -9,15 +9,15 @@ import { LambdaStack } from './lambda-stack';
  * This Stack creates the Lambda based API for the KarmaCart application.
  */
 export class ApiGatewayStack extends Stack {
-  
+
   constructor(scope: Construct, id: string, lambdaStack: LambdaStack, props?: StackProps) {
     super(scope, id, props);
 
-    const envLevel = process.env.KARMACART_ENV_LEVEL
+    const envLevel = process.env.KARMACART_ENV_LEVEL;
 
     const rootDomain = 'andersbuck.dev';
-    const uiDomain = (envLevel !== 'prod') ? `karma-cart-${envLevel}.${rootDomain}` : `karma-cart.${rootDomain}`
-    const apiDomain = (envLevel !== 'prod') ? `karma-cart-api-${envLevel}.${rootDomain}` : `karma-cart-api.${rootDomain}`
+    const uiDomain = (envLevel !== 'prod') ? `karma-cart-${envLevel}.${rootDomain}` : `karma-cart.${rootDomain}`;
+    const apiDomain = (envLevel !== 'prod') ? `karma-cart-api-${envLevel}.${rootDomain}` : `karma-cart-api.${rootDomain}`;
     
     // Create an API Gateway 
     const karmaCartApi = new HttpApi(this, "KarmaCartApi", {

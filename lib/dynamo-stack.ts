@@ -6,7 +6,7 @@ import { Construct } from 'constructs';
  * This Stack creates the Dynamo DB for the Karmacart API.
  */
 export class DynamoStack extends Stack {
-  public readonly companyTable
+  public readonly companyTable;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -20,6 +20,6 @@ export class DynamoStack extends Stack {
       billingMode: dynamo.BillingMode.PROVISIONED,
       readCapacity: 5,
       writeCapacity: 1,
-    })
+    });
   }
 }
