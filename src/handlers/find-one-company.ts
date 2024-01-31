@@ -14,7 +14,9 @@ async function handler(event: APIGatewayProxyEvent, context: Context) {
     throw new Error('Company id is undefined')
   }
 
-  validator.isNumeric(companyId)
+  if(!validator.isNumeric(companyId)) {
+    throw new Error('Company Id should be numeric')
+  }
 
   const command = new GetCommand({
     TableName: "Company",
