@@ -16,9 +16,9 @@ The `cdk.json` file tells the CDK Toolkit how to execute your app.
 ## Deployment
 
 ### Pre Deployment
-- Set $AWS_PROFILE
-- Set $AWS_ACCOUNT_NUMBER
-- Set $KARMACART_ENV_LEVEL, e.g. 'eng', 'test', 'prod' etc...
+- export AWS_PROFILE
+- export AWS_ACCOUNT_NUMBER
+- export KARMACART_ENV_LEVEL, e.g. 'eng', 'test', 'prod' etc...
 
 ### During Deployment
 Create CNAME DNS record with Name and Target provided by the ACM certificate in this stack.

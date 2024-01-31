@@ -2,42 +2,22 @@ import { Stack, StackProps } from 'aws-cdk-lib';
 import { ApiMapping, CfnStage, CorsHttpMethod, DomainName, HttpApi, HttpMethod } from 'aws-cdk-lib/aws-apigatewayv2';
 import { HttpLambdaIntegration } from 'aws-cdk-lib/aws-apigatewayv2-integrations';
 import { Certificate, CertificateValidation } from 'aws-cdk-lib/aws-certificatemanager';
-import { Runtime } from 'aws-cdk-lib/aws-lambda';
-import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs';
 import { Construct } from 'constructs';
-import { join } from 'path';
+import { LambdaStack } from './lambda-stack';
 
 /**
  * This Stack creates the Lambda based API for the KarmaCart application.
  */
-export class KarmaCartApiStack extends Stack {
-  constructor(scope: Construct, id: string, props?: StackProps) {
+export class ApiGatewayStack extends Stack {
+  
+  constructor(scope: Construct, id: string, lambdaStack: LambdaStack, props?: StackProps) {
     super(scope, id, props);
 
     const envLevel = process.env.KARMACART_ENV_LEVEL
 
     const rootDomain = 'andersbuck.dev';
-    const uiDomain = `karma-cart-${envLevel}.${rootDomain}`
-    const apiDomain = `karma-cart-api-${envLevel}.${rootDomain}`
-
-    const handlersDirectory = join(__dirname, "..", "src", "handlers")
-    const nodeRuntime = Runtime.NODEJS_20_X
-    
-    // Create Lambda functions...
-    const findOneCompanyLambda = new NodejsFunction(this, "FindOneCompanyLambda", {
-      runtime: nodeRuntime,
-      handler: "handler",
-      functionName: "karmacart-api-find-one-company-func",
-      entry: handlersDirectory + "/find-one-company.ts",
-    });
-
-    const findAllCompaniesLambda = new NodejsFunction(this, "FindAllCompaniesLambda", {
-      runtime: nodeRuntime,
-      handler: "handler",
-      functionName: "karmacart-api-find-all-companies-func",
-      entry: handlersDirectory + "/find-all-companies.ts",
-    });
-    // ...Lambda functions
+    const uiDomain = (envLevel !== 'prod') ? `karma-cart-${envLevel}.${rootDomain}` : `karma-cart.${rootDomain}`
+    const apiDomain = (envLevel !== 'prod') ? `karma-cart-api-${envLevel}.${rootDomain}` : `karma-cart-api.${rootDomain}`
     
     // Create an API Gateway 
     const karmaCartApi = new HttpApi(this, "KarmaCartApi", {
@@ -63,7 +43,7 @@ export class KarmaCartApiStack extends Stack {
       throttlingRateLimit: 5
     };
     
-    const findOneCompanyIntegration = new HttpLambdaIntegration('FindOneCompanyIntegration',findOneCompanyLambda);
+    const findOneCompanyIntegration = new HttpLambdaIntegration('FindOneCompanyIntegration', lambdaStack.findOneCompanyLambda);
     
     // Create a find one company resource and method for the API
     karmaCartApi.addRoutes({
@@ -72,7 +52,7 @@ export class KarmaCartApiStack extends Stack {
       integration: findOneCompanyIntegration,
     });
 
-    const findAllCompaniesIntegration = new HttpLambdaIntegration('FindAllCompaniesIntegration',findAllCompaniesLambda);
+    const findAllCompaniesIntegration = new HttpLambdaIntegration('FindAllCompaniesIntegration', lambdaStack.findAllCompaniesLambda);
     
     // Create a find all companies resource and method for the API
     karmaCartApi.addRoutes({
