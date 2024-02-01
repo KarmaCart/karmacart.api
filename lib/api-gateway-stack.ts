@@ -29,7 +29,7 @@ export class ApiGatewayStack extends Stack {
           CorsHttpMethod.PUT,
           CorsHttpMethod.POST,
         ],
-        allowOrigins: [`https://${uiDomain}`],
+        allowOrigins: [`https://${uiDomain}`, 'http://localhost:3000'],
       },
       disableExecuteApiEndpoint: true,
 
