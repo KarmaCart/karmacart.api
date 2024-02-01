@@ -17,7 +17,7 @@ const lambdaStack = new LambdaStack(app, 'KarmacartApiLambdaStack', {
   }
 });
 
-new ApiGatewayStack(app, 'KarmacartApiGatewayStack', lambdaStack, {
+const apiGatewayStack = new ApiGatewayStack(app, 'KarmacartApiGatewayStack', lambdaStack, {
   env: {
     region: 'us-east-1',
     account: awsAccountNumber
@@ -36,4 +36,7 @@ new IamStack(app, 'KarmacartApiIamStack', lambdaStack, dynamoStack, {
     region: 'us-east-1',
     account: awsAccountNumber
   }
-})
+});
+
+apiGatewayStack.addDependency(lambdaStack)
+lambdaStack.addDependency(dynamoStack)
