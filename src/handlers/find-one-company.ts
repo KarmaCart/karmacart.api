@@ -3,6 +3,7 @@ import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
 import validator from 'validator';
 import { ValidationResult } from "../types/validation";
+import { COMPANY_TABLE } from "../const/dynamo.const";
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
@@ -25,7 +26,7 @@ async function handler(event: APIGatewayProxyEvent, context: Context) {
 
   // Get Company from Dynamo Table.
   const command = new GetCommand({
-    TableName: "Company",
+    TableName: COMPANY_TABLE,
     Key: {
       pk: `COMPANY#${companyId}`,
     },

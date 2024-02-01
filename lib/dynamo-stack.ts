@@ -1,6 +1,7 @@
 import { Stack, StackProps } from 'aws-cdk-lib';
 import * as dynamo from 'aws-cdk-lib/aws-dynamodb';
 import { Construct } from 'constructs';
+import { COMPANY_TABLE } from '../src/const/dynamo.const';
 
 /**
  * This Stack creates the Dynamo DB for the Karmacart API.
@@ -12,7 +13,7 @@ export class DynamoStack extends Stack {
     super(scope, id, props);
 
     this.companyTable = new dynamo.Table(this, "CompanyTable", {
-      tableName: 'Company',
+      tableName: COMPANY_TABLE,
       partitionKey: {
         name: 'pk',
         type: dynamo.AttributeType.STRING
