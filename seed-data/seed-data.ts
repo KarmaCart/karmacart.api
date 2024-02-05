@@ -62,7 +62,7 @@ export const seedData = [
   {
     PutRequest: {
       Item: {
-        pk: { S: "COMPANY#0000000000003" },
+        pk: { S: "COMPANY#8901764012273" },
         address: { S: "1 Coca-Cola Plaza NW Atlanta, GA 30313, USA" },
         annualRevenue: { S: "25000000000" },
         companyName: { S: "The Coca-Cola Company" },
