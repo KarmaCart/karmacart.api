@@ -23,7 +23,7 @@ export class DynamoStack extends Stack {
       billingMode: dynamo.BillingMode.PROVISIONED,
       readCapacity: 5,
       writeCapacity: 1,
-      removalPolicy: RemovalPolicy.RETAIN_ON_UPDATE_OR_DELETE
+      removalPolicy: RemovalPolicy.DESTROY
     });
 
     const awsSdkCall: customResources.AwsSdkCall = {
