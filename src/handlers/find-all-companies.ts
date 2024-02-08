@@ -1,7 +1,6 @@
 import { APIGatewayProxyEvent, Context, APIGatewayProxyResult } from "aws-lambda";
-import { ValidationResult } from "../types/validation";
-import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
-import { DynamoDBClient, ScanCommand } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocumentClient, ScanCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { COMPANY_TABLE } from "../const/dynamo.const";
 
 const client = new DynamoDBClient({});
@@ -14,7 +13,6 @@ async function handler(event: APIGatewayProxyEvent, context: Context) {
 
   // Scan entire table for all Companies
   const scanCommand = new ScanCommand({
-    ProjectionExpression: "pk, companyName",
     TableName: COMPANY_TABLE,
   });
 
