@@ -2,7 +2,7 @@ import { RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
 import * as dynamo from 'aws-cdk-lib/aws-dynamodb';
 import * as customResources from 'aws-cdk-lib/custom-resources'
 import { Construct } from 'constructs';
-import { ALL_PRODUCTS_BY_NAME_INDEX, COMPANY_TABLE, PRODUCT_INDEX } from '../src/const/dynamo.const';
+import { ALL_PRODUCTS_BY_SORT_INDEX, COMPANY_TABLE, PRODUCT_INDEX } from '../src/const/dynamo.const';
 import { seedData } from '../seed-data/seed-data';
 
 /**
@@ -43,14 +43,14 @@ export class DynamoStack extends Stack {
 
     this.companyTable.addGlobalSecondaryIndex(skPkGsiProps)
 
-    const allProductsByNameGsiProps: dynamo.GlobalSecondaryIndexProps = {
-      indexName: ALL_PRODUCTS_BY_NAME_INDEX,
+    const allProductsBySortGsiProps: dynamo.GlobalSecondaryIndexProps = {
+      indexName: ALL_PRODUCTS_BY_SORT_INDEX,
       partitionKey: {
         name: 'allProductsGSIPK',
         type: dynamo.AttributeType.STRING,
       },
       sortKey: {
-        name: 'productName',
+        name: 'productSort',
         type: dynamo.AttributeType.STRING,
       },
       projectionType: dynamo.ProjectionType.ALL,
@@ -58,7 +58,7 @@ export class DynamoStack extends Stack {
       writeCapacity: 1,
     };
 
-    this.companyTable.addGlobalSecondaryIndex(allProductsByNameGsiProps)
+    this.companyTable.addGlobalSecondaryIndex(allProductsBySortGsiProps)
 
     const awsSdkCall: customResources.AwsSdkCall = {
       service: 'DynamoDB',

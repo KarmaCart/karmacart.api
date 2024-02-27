@@ -1,7 +1,7 @@
 import { APIGatewayProxyEvent, Context, APIGatewayProxyResult } from "aws-lambda";
 import { DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { ALL_PRODUCTS_BY_NAME_INDEX, COMPANY_TABLE } from "../const/dynamo.const";
+import { ALL_PRODUCTS_BY_SORT_INDEX, COMPANY_TABLE } from "../const/dynamo.const";
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
@@ -13,7 +13,7 @@ async function handler(event: APIGatewayProxyEvent, context: Context) {
 
   const queryCommand = new QueryCommand({
     TableName: COMPANY_TABLE,
-    IndexName: ALL_PRODUCTS_BY_NAME_INDEX,
+    IndexName: ALL_PRODUCTS_BY_SORT_INDEX,
     KeyConditionExpression: "allProductsGSIPK = :allProductsGSIPK",
     ExpressionAttributeValues: {
       ":allProductsGSIPK": "PRODUCT#ALL"

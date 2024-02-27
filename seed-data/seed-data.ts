@@ -19,7 +19,8 @@ export const seedData = [
         sk: { S: "PRODUCT#0817939012390" },
         allProductsGSIPK: { S: "PRODUCT#ALL" },
         productName: { S: "Method All-Purpose Cleaner" },
-        productDescription: { S: "Method All-Purpose Cleaner Spray, Plant-Based and Biodegradable Formula Perfect for Most Counters, Tiles, Stone, and More, 28 oz Spray Bottles" }
+        productDescription: { S: "Method All-Purpose Cleaner Spray, Plant-Based and Biodegradable Formula Perfect for Most Counters, Tiles, Stone, and More, 28 oz Spray Bottles" },
+        productSort: { S: "2" }
       }
     }
   },
@@ -43,7 +44,8 @@ export const seedData = [
         sk: { S: "PRODUCT#0048256296181" },
         allProductsGSIPK: { S: "PRODUCT#ALL" },
         productName: { S: "Astonish Kitchen Cleaner" },
-        productDescription: { S: "Astonish Zesty Lemon Scented Kitchen Cleaner - All Purpose Cleaning Solution Removes Grease, Grime, & Surface Stains - Cruelty Free Kitchen Grease And Multi Surface Cleaner - 750ml Spray Bottle" }
+        productDescription: { S: "Astonish Zesty Lemon Scented Kitchen Cleaner - All Purpose Cleaning Solution Removes Grease, Grime, & Surface Stains - Cruelty Free Kitchen Grease And Multi Surface Cleaner - 750ml Spray Bottle" },
+        productSort: { S: "1" }
       }
     }
   },
@@ -67,7 +69,8 @@ export const seedData = [
         sk: { S: "PRODUCT#8901764012273" },
         allProductsGSIPK: { S: "PRODUCT#ALL" },
         productName: { S: "Coca-Cola Soda" },
-        productDescription: { S: "Coca-Cola Original Taste - the refreshing, crisp taste you know and love, 16.9 FL OZ in each bottle" }
+        productDescription: { S: "Coca-Cola Original Taste - the refreshing, crisp taste you know and love, 16.9 FL OZ in each bottle" },
+        productSort: { S: "4" }
       }
     }
   },
@@ -91,7 +94,8 @@ export const seedData = [
         sk: { S: "PRODUCT#0815796020008" },
         allProductsGSIPK: { S: "PRODUCT#ALL" },
         productName: { S: "Cawston Press Soft Drink" },
-        productDescription: { S: "Cawston Press Sparkling Rhubarb & Apple Juice, 4 Packs, Sugar Free, 1320 ML" }
+        productDescription: { S: "Cawston Press Sparkling Rhubarb & Apple Juice, 4 Packs, Sugar Free, 1320 ML" },
+        productSort: { S: "3" }
       }
     }
   },
