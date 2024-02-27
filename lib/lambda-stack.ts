@@ -10,6 +10,8 @@ import { join } from 'path';
 export class LambdaStack extends Stack {
   public readonly findOneCompanyLambda;
   public readonly findAllCompaniesLambda;
+  public readonly findAllProductsLambda;
+  public readonly findOneProductLambda;
 
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
@@ -29,6 +31,20 @@ export class LambdaStack extends Stack {
       handler: "handler",
       functionName: "karmacart-api-find-all-companies-func",
       entry: handlersDirectory + "/find-all-companies.ts",
+    });
+
+    this.findAllProductsLambda = new NodejsFunction(this, "FindAllProductsLambda", {
+      runtime: nodeRuntime,
+      handler: "handler",
+      functionName: "karmacart-api-find-all-products-func",
+      entry: handlersDirectory + "/find-all-products.ts",
+    });
+
+    this.findOneProductLambda = new NodejsFunction(this, "FindOneProductLambda", {
+      runtime: nodeRuntime,
+      handler: "handler",
+      functionName: "karmacart-api-find-one-product-func",
+      entry: handlersDirectory + "/find-one-product.ts",
     });
   }
 }

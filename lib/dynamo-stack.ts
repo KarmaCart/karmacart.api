@@ -2,7 +2,7 @@ import { RemovalPolicy, Stack, StackProps } from 'aws-cdk-lib';
 import * as dynamo from 'aws-cdk-lib/aws-dynamodb';
 import * as customResources from 'aws-cdk-lib/custom-resources'
 import { Construct } from 'constructs';
-import { COMPANY_TABLE } from '../src/const/dynamo.const';
+import { ALL_PRODUCTS_BY_NAME_INDEX, COMPANY_TABLE, PRODUCT_INDEX } from '../src/const/dynamo.const';
 import { seedData } from '../seed-data/seed-data';
 
 /**
@@ -14,10 +14,14 @@ export class DynamoStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    this.companyTable = new dynamo.Table(this, "CompanyTable", {
+    this.companyTable = new dynamo.Table(this, COMPANY_TABLE, {
       tableName: COMPANY_TABLE,
       partitionKey: {
         name: 'pk',
+        type: dynamo.AttributeType.STRING
+      },
+      sortKey: {
+        name: 'sk',
         type: dynamo.AttributeType.STRING
       },
       billingMode: dynamo.BillingMode.PROVISIONED,
@@ -25,6 +29,36 @@ export class DynamoStack extends Stack {
       writeCapacity: 1,
       removalPolicy: RemovalPolicy.DESTROY
     });
+
+    const skPkGsiProps: dynamo.GlobalSecondaryIndexProps = {
+      indexName: PRODUCT_INDEX,
+      partitionKey: {
+        name: 'sk',
+        type: dynamo.AttributeType.STRING,
+      },
+      projectionType: dynamo.ProjectionType.ALL,
+      readCapacity: 5,
+      writeCapacity: 1,
+    };
+
+    this.companyTable.addGlobalSecondaryIndex(skPkGsiProps)
+
+    const allProductsByNameGsiProps: dynamo.GlobalSecondaryIndexProps = {
+      indexName: ALL_PRODUCTS_BY_NAME_INDEX,
+      partitionKey: {
+        name: 'allProductsGSIPK',
+        type: dynamo.AttributeType.STRING,
+      },
+      sortKey: {
+        name: 'productName',
+        type: dynamo.AttributeType.STRING,
+      },
+      projectionType: dynamo.ProjectionType.ALL,
+      readCapacity: 5,
+      writeCapacity: 1,
+    };
+
+    this.companyTable.addGlobalSecondaryIndex(allProductsByNameGsiProps)
 
     const awsSdkCall: customResources.AwsSdkCall = {
       service: 'DynamoDB',

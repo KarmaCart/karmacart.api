@@ -13,5 +13,7 @@ export class IamStack extends Stack {
 
     dynamoStack.companyTable.grantReadData(lambdaStack.findAllCompaniesLambda);
     dynamoStack.companyTable.grantReadData(lambdaStack.findOneCompanyLambda);
+    dynamoStack.companyTable.grantReadData(lambdaStack.findAllProductsLambda);
+    dynamoStack.companyTable.grantReadData(lambdaStack.findOneProductLambda);
   }
 }

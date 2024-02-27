@@ -60,6 +60,24 @@ export class ApiGatewayStack extends Stack {
       methods: [ HttpMethod.GET],
       integration: findAllCompaniesIntegration,
     });
+
+    const findAllProductsIntegration = new HttpLambdaIntegration('FindAllProductsIntegration', lambdaStack.findAllProductsLambda);
+    
+    // Create a find all products resource and method for the API
+    karmaCartApi.addRoutes({
+      path: '/product',
+      methods: [ HttpMethod.GET],
+      integration: findAllProductsIntegration,
+    });
+
+    const findOneProductIntegration = new HttpLambdaIntegration('FindOneProductIntegration', lambdaStack.findOneProductLambda);
+    
+    // Create a find one company resource and method for the API
+    karmaCartApi.addRoutes({
+      path: '/product/{id}',
+      methods: [ HttpMethod.GET],
+      integration: findOneProductIntegration,
+    });
     
     // Create Certificate
     const cert = new Certificate(

@@ -1,9 +1,9 @@
 import { APIGatewayProxyEvent, Context, APIGatewayProxyResult } from "aws-lambda";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, GetCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, QueryCommand } from "@aws-sdk/lib-dynamodb";
 import validator from 'validator';
 import { ValidationResult } from "../types/validation";
-import { COMPANY_TABLE, PK_COMPANY_PREFIX } from "../const/dynamo.const";
+import { COMPANY_TABLE, PRODUCT_INDEX, SK_PRODUCT_PREFIX } from "../const/dynamo.const";
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
@@ -13,10 +13,10 @@ const docClient = DynamoDBDocumentClient.from(client);
  */
 async function handler(event: APIGatewayProxyEvent, context: Context) {
 
-  const companyId = event.pathParameters?.id;
+  const productId = event.pathParameters?.id;
 
   // Validate function input.
-  const validationResult: ValidationResult = validate(companyId);
+  const validationResult: ValidationResult = validate(productId);
   if (!validationResult.isValid) {
     return {
       statusCode: 400,
@@ -24,28 +24,28 @@ async function handler(event: APIGatewayProxyEvent, context: Context) {
     };
   }
 
-  // Get Company from Dynamo Table.
-  const command = new GetCommand({
+  const queryCommand = new QueryCommand({
     TableName: COMPANY_TABLE,
-    Key: {
-      pk: `${PK_COMPANY_PREFIX}${companyId}`,
-      sk: `${PK_COMPANY_PREFIX}${companyId}`,
-    },
-  });
+    IndexName: PRODUCT_INDEX,
+    KeyConditionExpression: "sk = :sk",
+    ExpressionAttributeValues: {
+      ":sk": `${SK_PRODUCT_PREFIX}${productId}`
+    }
+  })
 
-  const getCommandOutput = await docClient.send(command);
+  const queryCommandOutput = await docClient.send(queryCommand);
 
   // Handle Gateway response with Dynamo result.
   let response: APIGatewayProxyResult
-  if (!getCommandOutput.Item) {
+  if (!queryCommandOutput.Items || queryCommandOutput.Items.length === 0) {
     response = {
       statusCode: 404,
-      body: 'Company not found',
+      body: 'Product not found',
     };
   } else {
     response = {
       statusCode: 200,
-      body: JSON.stringify(getCommandOutput.Item),
+      body: JSON.stringify(queryCommandOutput.Items[0]),
     };
   }
 
@@ -55,21 +55,21 @@ async function handler(event: APIGatewayProxyEvent, context: Context) {
 /**
  * Validates the companyId path parameter.
  */
-function validate(companyId: string|undefined): ValidationResult {
+function validate(productId: string|undefined): ValidationResult {
   let validationResult: ValidationResult = {
     isValid: true,
     message: ''
   }
 
-  if (!companyId) {
+  if (!productId) {
     validationResult = {
       isValid: false,
-      message: 'Company Id is undefined'
+      message: 'Product Id is undefined'
     };
-  } else if(!validator.isNumeric(companyId)) {
+  } else if(!validator.isNumeric(productId)) {
     validationResult = {
       isValid: false,
-      message: 'Company Id should be numeric'
+      message: 'Product Id should be numeric'
     };
   }
 
