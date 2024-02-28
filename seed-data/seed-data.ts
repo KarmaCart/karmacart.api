@@ -82,7 +82,7 @@ export const seedData = [
         address: { S: "Timsons Business Centre, Bath Road, Kettering Northamptonshire NN16 8NQ, UK" },
         annualRevenue: { S: "80326" },
         companyName: { S: "Cawston Press Ltd" },
-        ethicalScore: { N: "12" },
+        ethicalScore: { N: "10" },
         website: { S: "https://cawstonpress.com/" }
       }
     }
