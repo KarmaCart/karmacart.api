@@ -1,8 +1,8 @@
 # karmacart.api
 
-This is a blank project for CDK development with TypeScript.
+This is an API project whose infrastructure is defined using AWS CDK in /lib and /bin. API functionality is implemented in src/handlers.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+The `cdk.json` file tells the CDK Toolkit how to execute this app.
 
 ## Useful commands
 
